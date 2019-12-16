@@ -1,0 +1,85 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <title>To Coffee Or Not To Coffee - Azure</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <script src="app.js"></script>
+</head>
+
+<body>
+    <!--[if IE]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+    <h2 class="ui center aligned icon header" style="padding-top: 3em;">
+        <i class="coffee icon"></i>
+        <div class="content">
+            To Coffee Or Not To Coffee?
+            <div class="sub header">Should you take a break for coffee when deploying to Azure?</div>
+        </div>
+    </h2>
+
+    <div class="ui raised very padded text container segment" style="margin-bottom: 3em;">
+        <table class="ui inverted green fixed table">
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Time</th>
+                    <th>Stability</th>
+                </tr>
+            </thead>
+            <tbody id="lessThan60Services">
+            </tbody>
+        </table>
+        <table class="ui inverted olive fixed table">
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Time</th>
+                    <th>Stability</th>
+                </tr>
+            </thead>
+            <tbody id="lessThan180Services">
+            </tbody>
+        </table>
+        <table class="ui inverted yellow fixed table">
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Time</th>
+                    <th>Stability</th>
+                </tr>
+            </thead>
+            <tbody id="lessThan300Services">
+            </tbody>
+        </table>
+        <table class="ui inverted orange fixed table">
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Time</th>
+                    <th>Stability</th>
+                </tr>
+            </thead>
+            <tbody id="lessThan600Services">
+            </tbody>
+        </table>
+        <table class="ui inverted red fixed table">
+            <thead>
+                <tr>
+                    <th>Service</th>
+                    <th>Time</th>
+                    <th>Stability</th>
+                </tr>
+            </thead>
+            <tbody id="longLastingServices">
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
