@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Xml;
 using Microsoft.Azure.Management.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
@@ -11,23 +14,78 @@ namespace job
     public static class DeployTemplates
     {
         private static IAzure azure = Authenticate();
+        private static string[] services = new[] {
+            "storageAccount",
+            "containerRegistry"
+        };
 
         [FunctionName("DeployTemplates")]
-        public static void Run([TimerTrigger("0 * */1 * * *")]TimerInfo myTimer, ILogger log)
+        public static void Run(
+            [TimerTrigger("0 * */1 * * *")]TimerInfo myTimer,
+            [Table("deployments")] ICollector<Deployment> table,
+            ILogger log
+        )
         {
-            var resourceGroupName = GenerateResourceGroupName("virtualMachine");
-            var deploymentName = GenerateResourceGroupName("virtualMachine");
+            foreach (var serviceName in services)
+            {
+                log.LogTrace($"Deploying {serviceName} service...");
 
-            azure.ResourceGroups.Define(resourceGroupName)
-                    .WithRegion(Region.USWest)
-                    .Create();
+                var deployments = DeployResource(serviceName, log);
+                deployments.ForEach(_ => table.Add(_));
+            }
+        }
 
-            azure.Deployments.Define(deploymentName)
-                    .WithExistingResourceGroup(resourceGroupName)
-                    .WithTemplate("{}")
-                    .WithParameters("{}")
-                    .WithMode(DeploymentMode.Complete)
-                    .Create();
+        private static List<Deployment> DeployResource(string serviceName, ILogger log)
+        {
+            var deployments = new List<Deployment>();
+            var templatesDir = Path.Combine(Directory.GetCurrentDirectory(), "templates", serviceName);
+
+            foreach (var versionDirectory in Directory.EnumerateDirectories(templatesDir))
+            {
+                var resourceGroupName = GenerateResourceGroupName(serviceName);
+
+                try
+                {
+                    azure.ResourceGroups.Define(resourceGroupName)
+                            .WithRegion(Region.EuropeWest)
+                            .Create();
+
+                    foreach (var template in Directory.EnumerateFiles(versionDirectory))
+                    {
+                        try
+                        {
+                            var version = new DirectoryInfo(versionDirectory).Name;
+                            var deploymentName = GenerateDeploymentName(serviceName, version);
+                            var deployment = azure.Deployments.Define(deploymentName)
+                                    .WithExistingResourceGroup(resourceGroupName)
+                                    .WithTemplate(File.ReadAllText(template))
+                                    .WithParameters("{}")
+                                    .WithMode(DeploymentMode.Complete)
+                                    .Create();
+
+                            var duration = XmlConvert.ToTimeSpan(deployment.Inner.Properties.Duration);
+                            deployments.Add(new Deployment(serviceName)
+                            {
+                                DurationInSeconds = duration.Seconds
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            log.LogError(ex, $"Error while deploying template {template}!");
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    log.LogError(ex, $"Error while deploying resource group {resourceGroupName}!");
+                }
+                finally
+                {
+                    azure.ResourceGroups.DeleteByName(resourceGroupName);
+                }
+            }
+
+            return deployments;
         }
 
         private static string GenerateResourceGroupName(string serviceName)
@@ -36,10 +94,10 @@ namespace job
             return $"{serviceName}-{now.ToString("yyyMMddHHmm")}-rg";
         }
 
-        private static string GenerateDeploymentName(string serviceName)
+        private static string GenerateDeploymentName(string serviceName, string version)
         {
             var now = DateTime.Now;
-            return $"{serviceName}-{now.ToString("yyyMMddHHmm")}";
+            return $"{serviceName}-{now.ToString("yyyMMddHHmm")}-{version}";
         }
 
         private static IAzure Authenticate()
