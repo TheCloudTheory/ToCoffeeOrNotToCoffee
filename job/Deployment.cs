@@ -9,8 +9,10 @@ namespace job
         {
             PartitionKey = serviceName;
             RowKey = (DateTime.MaxValue.Ticks - DateTime.Now.Ticks).ToString();
+            DateAndTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
         }
 
         public int DurationInSeconds { get; set; }
+        public string DateAndTime { get; set; }
     }
 }
