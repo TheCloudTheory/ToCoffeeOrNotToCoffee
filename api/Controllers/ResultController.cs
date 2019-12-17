@@ -1,5 +1,8 @@
-﻿using api.Models;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using api.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace api.Controllers
 {
@@ -7,10 +10,21 @@ namespace api.Controllers
     [Route("[controller]")]
     public class ResultController : ControllerBase
     {
-        [HttpGet]
-        public DeploymentResults Get()
+        private readonly StorageClient storage;
+
+        public ResultController(StorageClient storage)
         {
-            return new DeploymentResults();
+            this.storage = storage;
+        }
+
+        [HttpGet]
+        public async Task<Deployment[]> Get()
+        {
+            var table = this.storage.Client.GetTableReference("deployments");
+            var queryResult = await table.ExecuteQuerySegmentedAsync<DeploymentTable>(new TableQuery<DeploymentTable>(), null);
+            var result = queryResult.Results.Select(_ => new Deployment(_)).ToArray();
+
+            return result;
         }
     }
 }
