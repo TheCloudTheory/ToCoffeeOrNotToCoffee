@@ -19,7 +19,8 @@ namespace job
             "storageAccount",
             "containerRegistry",
             "eventHubNamespace",
-            "eventGridTopic"
+            "eventGridTopic",
+            "applicationInsights"
         };
 
         [FunctionName("DeployTemplates")]

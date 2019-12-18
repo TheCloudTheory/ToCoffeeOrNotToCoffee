@@ -1,0 +1,16 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"resources": [
+		{
+			"name": "tcontc20150501",
+			"type": "Microsoft.Insights/components",
+			"apiVersion": "2015-05-01",
+			"location": "westeurope",
+			"kind": "web",
+			"properties": {
+				"Application_Type": "web"
+			}
+		}
+	]
+}
