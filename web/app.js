@@ -4,6 +4,7 @@ function app() {
     let lessThan300Seconds = [];
     let lessThan600Seconds = [];
     let longLastingDeployments = [];
+    let services = {};
 
     function reqListener(event) {
         let response = JSON.parse(event.target.response);
@@ -11,14 +12,47 @@ function app() {
 
         for (let i = 0; i < deployments.length; i++) {
             let deployment = deployments[i];
+            services[deployment.serviceName] = deployment;
             determineBucket(deployment);
         }
 
         renderBuckets();
+
+        $('.ui.label').popup();
+        $('.duration-chart').popup({
+            title: 'Duration',
+            html: '<canvas id="durationChart" width="300" height="150"></canvas>',
+            onVisible: (e) => {
+                let el = document.getElementById('durationChart');
+                let serviceData = services[$(e).data('service')];
+                let chartData = [];
+
+                let sorted = serviceData.metadata.sort((a, b) => {
+                    return new Date(a.dateAndTime) - new Date(b.dateAndTime);
+                });
+
+                sorted.forEach((value, index) => {
+                    chartData.push({
+                        x: value.dateAndTime,
+                        y: value.duration
+                    });
+                });
+
+                let chart = new Chart(el, {
+                    type: 'line',
+                    data: {
+                        datasets: [{
+                            label: 'Deployment duration (s)',
+                            data: chartData
+                        }]
+                    }
+                });
+            }
+        });
     }
 
     function determineBucket(deployment) {
-        let deploymentTime = deployment.durations[0];
+        let deploymentTime = deployment.metadata[0].duration;
 
         if (deploymentTime < 60) {
             lessThan60Seconds.push(deployment);
@@ -59,45 +93,46 @@ function app() {
         for (let i = 0; i < bucket.length; i++) {
             let service = bucket[i];
             let row = document.createElement('tr');
-            let minutes = Math.floor(service.durations[0] / 60);
-            let seconds = service.durations[0] - minutes * 60;
+            let minutes = Math.floor(service.metadata[0].duration / 60);
+            let seconds = service.metadata[0].duration - minutes * 60;
             let html = '';
-            let stability = `<div class="ui label">${calculateStability(service.durations)}</div>`;
+            let stability = calculateStability(service.metadata);
 
             if (minutes === 0) {
-                html = `<td>${service.serviceName}</td><td>${seconds}s</td><td>${stability}</td>`;
+                html = `<td>${service.serviceName}</td><td><span class="duration-chart" data-service="${service.serviceName}">${seconds}s</span></td><td>${stability}</td>`;
             } else {
-                html = `<td>${service.serviceName}</td><td>${minutes}m ${seconds}s</td><td>${stability}</td>`;
+                html = `<td>${service.serviceName}</td><td><span class="duration-chart" data-service="${service.serviceName}">${minutes}m ${seconds}s</span></td><td>${stability}</td>`;
             }
 
             row.innerHTML = html;
             htmlElement.appendChild(row);
         }
 
-        function calculateStability(durations) {
-            let q25 = quantile(durations, .25);
-            let q50 = quantile(durations, .50);
-            let q75 = quantile(durations, .75);
-            let q99 = quantile(durations, .99);
+        function calculateStability(metadata) {
+            let q25 = quantile(metadata, .25);
+            let q50 = quantile(metadata, .50);
+            let q75 = quantile(metadata, .75);
+            let q99 = quantile(metadata, .99);
+            let percentiles = `.25: <b>${q25}s</b><br />.50: <b>${q50}s</b><br />.75: <b>${q75}s</b><br />.99: <b>${q99}s</b>`;
 
             let ratio = q50 / q99 * 100;
-            if(ratio > 90) {
-                return 'Good!';
+            if (ratio > 90) {
+                return `<div class="ui label" data-html="${percentiles}" data-variation="inverted">Good!</div>`;
             }
 
-            if(ratio > 50) {
-                return 'Average';
+            if (ratio > 50) {
+                return `<div class="ui label" data-html="${percentiles}" data-variation="inverted">Average</div>`;
             }
 
-            return 'Bad :(';
+            return `<div class="ui label" data-html="${percentiles}" data-variation="inverted">Bad :(</div>`;
         }
 
         function asc(arr) {
-            return arr.sort((a, b) => a - b);
+            return arr.sort((a, b) => a.duration - b.duration);
         }
 
         function sum(arr) {
-            return arr.reduce((a, b) => a + b, 0);
+            return arr.reduce((a, b) => a.duration + b.duration, 0);
         }
 
         function mean(arr) {
@@ -106,7 +141,7 @@ function app() {
 
         function std(arr) {
             const mu = mean(arr);
-            const diffArr = arr.map(a => (a - mu) ** 2);
+            const diffArr = arr.map(a => (a.duration - mu) ** 2);
             return Math.sqrt(sum(diffArr) / (arr.length - 1));
         }
 
@@ -115,10 +150,10 @@ function app() {
             const pos = ((sorted.length) - 1) * q;
             const base = Math.floor(pos);
             const rest = pos - base;
-            if ((sorted[base + 1] !== undefined)) {
-                return sorted[base] + rest * (sorted[base + 1] - sorted[base]);
+            if ((sorted[base + 1].duration !== undefined)) {
+                return sorted[base].duration + rest * (sorted[base + 1].duration - sorted[base].duration);
             } else {
-                return sorted[base];
+                return sorted[base].duration;
             }
         };
     }
