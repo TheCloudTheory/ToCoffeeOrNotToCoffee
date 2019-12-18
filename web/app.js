@@ -69,7 +69,8 @@ function app() {
 
     var request = new XMLHttpRequest();
     request.addEventListener("load", reqListener.bind(this));
-    request.open("GET", "https://localhost:5001/result");
+    request.open("GET", "http://tocoffeeazure.cloud/result");
+    //request.open("GET", "https://localhost:5001/result");
     request.send();
 }
 

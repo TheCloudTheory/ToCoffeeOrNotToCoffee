@@ -22,7 +22,7 @@ namespace api.Controllers
         {
             var table = this.storage.Client.GetTableReference("deployments");
             var queryResult = await table.ExecuteQuerySegmentedAsync<DeploymentTable>(new TableQuery<DeploymentTable>(), null);
-            var result = queryResult.Results.Select(_ => new Deployment(_)).ToArray();
+            var result = queryResult.Results.GroupBy(_ => _.PartitionKey).Select(_ => new Deployment(_.Key, _.Select(d => d.DurationInSeconds))).ToArray();
 
             return result;
         }

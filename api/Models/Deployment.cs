@@ -1,14 +1,17 @@
+using System.Collections.Generic;
+using System.Linq;
+
 namespace api.Models
 {
     public class Deployment
     {
         public string serviceName { get; private set; }
-        public int duration { get; private set; }
+        public int[] durations { get; private set; }
 
-        public Deployment(DeploymentTable table)
+        public Deployment(string key, IEnumerable<int> durations)
         {
-            this.serviceName = table.PartitionKey;
-            this.duration = table.DurationInSeconds;
+            this.serviceName = key;
+            this.durations = durations.ToArray();
         }
     }
 }
