@@ -1,0 +1,16 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"resources": [
+		{
+			"apiVersion": "2017-04-01",
+			"location": "westeurope",
+			"name": "tcornc20170401",
+			"sku": {
+				"name": "Basic",
+				"tier": "Basic"
+			},
+			"type": "Microsoft.EventHub/namespaces"
+		}
+	]
+}

@@ -17,7 +17,9 @@ namespace job
         private static IAzure azure = Authenticate();
         private static string[] services = new[] {
             "storageAccount",
-            "containerRegistry"
+            "containerRegistry",
+            "eventHubNamespace",
+            "eventGridTopic"
         };
 
         [FunctionName("DeployTemplates")]
