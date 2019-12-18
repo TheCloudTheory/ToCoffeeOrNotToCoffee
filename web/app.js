@@ -18,7 +18,7 @@ function app() {
     }
 
     function determineBucket(deployment) {
-        let deploymentTime = deployment.last24DeploymentsDuration[23];
+        let deploymentTime = deployment.durations[0];
 
         if (deploymentTime < 60) {
             lessThan60Seconds.push(deployment);
@@ -59,8 +59,8 @@ function app() {
         for (let i = 0; i < bucket.length; i++) {
             let service = bucket[i];
             let row = document.createElement('tr');
-            let minutes = Math.floor(service.last24DeploymentsDuration[23] / 60);
-            let seconds = service.last24DeploymentsDuration[23] - minutes * 60;
+            let minutes = Math.floor(service.durations[0] / 60);
+            let seconds = service.durations[0] - minutes * 60;
             let html = `<td>${service.serviceName}</td><td>${minutes}m ${seconds}s</td><td></td>`;
             row.innerHTML = html;
             htmlElement.appendChild(row);
