@@ -21,11 +21,12 @@ function app() {
         $('.ui.label').popup();
         $('.duration-chart').popup({
             title: 'Duration',
-            html: '<canvas id="durationChart" width="300" height="150"></canvas>',
+            html: '<canvas id="durationChart" width="400" height="250"></canvas>',
             onVisible: (e) => {
                 let el = document.getElementById('durationChart');
                 let serviceData = services[$(e).data('service')];
                 let chartData = [];
+                let labels = [];
 
                 let sorted = serviceData.metadata.sort((a, b) => {
                     return new Date(a.dateAndTime) - new Date(b.dateAndTime);
@@ -36,6 +37,8 @@ function app() {
                         x: value.dateAndTime,
                         y: value.duration
                     });
+
+                    labels.push(value.dateAndTime);
                 });
 
                 let chart = new Chart(el, {
@@ -44,7 +47,11 @@ function app() {
                         datasets: [{
                             label: 'Deployment duration (s)',
                             data: chartData
-                        }]
+                        }],
+                        labels: labels
+                    },
+                    options: {
+                        responsive: false
                     }
                 });
             }

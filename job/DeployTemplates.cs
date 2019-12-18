@@ -20,7 +20,8 @@ namespace job
             "containerRegistry",
             "eventHubNamespace",
             "eventGridTopic",
-            "applicationInsights"
+            "applicationInsights",
+            "appServicePlan"
         };
 
         [FunctionName("DeployTemplates")]
