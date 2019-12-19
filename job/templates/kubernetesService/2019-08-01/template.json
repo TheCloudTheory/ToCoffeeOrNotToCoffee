@@ -1,0 +1,53 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sshPublicKey": {
+            "type": "string"
+        },
+        "spAppId": {
+            "type": "string"
+        },
+        "spClientSecret": {
+            "type": "securestring"
+        }
+    },
+    "resources": [
+        {
+            "name": "tcontc20190801",
+            "apiVersion": "2019-08-01",
+            "type": "Microsoft.ContainerService/managedClusters",
+            "location": "westeurope",
+            "properties": {
+                "kubernetesVersion": "1.14.8",
+                "dnsPrefix": "tcontc20190801",
+                "agentPoolProfiles": [
+                    {
+                        "count": "1",
+                        "vmSize": "Standard_D2_v3",
+                        "osDiskSizeGB": 0,
+                        "osType": "Linux",
+                        "type": "VirtualMachineScaleSets"
+                    }
+                ],
+                "linuxProfile": {
+                    "adminUsername": "tcontc",
+                    "ssh": {
+                        "publicKeys": [
+                            {
+                                "keyData": "[parameters('sshPublicKey')]"
+                            }
+                        ]
+                    }
+                },
+                "servicePrincipalProfile": {
+                    "clientId": "[parameters('spAppId')]",
+                    "secret": "[parameters('spClientSecret')]"
+                },
+                "enabledRBAC": true
+            },
+            "resources": [
+            ]
+        }
+    ]
+}

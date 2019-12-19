@@ -9,6 +9,7 @@ using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace job
 {
@@ -22,7 +23,8 @@ namespace job
             "eventGridTopic",
             "applicationInsights",
             "appServicePlan",
-            "webApp"
+            "webApp",
+            "kubernetesService"
         };
 
         [FunctionName("DeployTemplates")]
@@ -117,7 +119,7 @@ namespace job
                 var deployment = azure.Deployments.Define(deploymentName)
                         .WithExistingResourceGroup(resourceGroupName)
                         .WithTemplate(File.ReadAllText(template))
-                        .WithParameters("{}")
+                        .WithParameters(serviceName == "kubernetesService" ? GenerateSecretsForAks() : "{}")
                         .WithMode(DeploymentMode.Complete)
                         .Create();
 
@@ -131,6 +133,17 @@ namespace job
             {
                 log.LogError(ex, $"Error while deploying template {template}!");
             }
+        }
+
+        private static string GenerateSecretsForAks()
+        {
+            var parameters = new {
+                sshPublicKey = Environment.GetEnvironmentVariable("SSH_PUBLIC_KEY"),
+                spAppId = Environment.GetEnvironmentVariable("APPLICATION_ID"),
+                spClientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET")
+            };
+
+            return JsonConvert.SerializeObject(parameters);
         }
 
         private static IAzure Authenticate()
