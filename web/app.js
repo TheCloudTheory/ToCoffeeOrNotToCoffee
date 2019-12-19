@@ -157,7 +157,7 @@ function app() {
             const pos = ((sorted.length) - 1) * q;
             const base = Math.floor(pos);
             const rest = pos - base;
-            if ((sorted[base + 1].duration !== undefined)) {
+            if (sorted.length > 1 && (sorted[base + 1].duration !== undefined)) {
                 return sorted[base].duration + rest * (sorted[base + 1].duration - sorted[base].duration);
             } else {
                 return sorted[base].duration;

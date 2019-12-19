@@ -21,7 +21,8 @@ namespace job
             "eventHubNamespace",
             "eventGridTopic",
             "applicationInsights",
-            "appServicePlan"
+            "appServicePlan",
+            "webApp"
         };
 
         [FunctionName("DeployTemplates")]
