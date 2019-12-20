@@ -9,6 +9,7 @@ using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
+using Microsoft.Rest.Azure;
 using Newtonsoft.Json;
 
 namespace job
@@ -95,6 +96,10 @@ namespace job
                     DeployResource(versionDirectory, serviceName, resourceGroupName, template, deployments, log);
                 }
             }
+            catch (CloudException ex)
+            {
+                log.LogError(ex, JsonConvert.SerializeObject(ex.Body.Details));
+            }
             catch (Exception ex)
             {
                 log.LogError(ex, $"Error while deploying resource group {resourceGroupName}!");
@@ -129,6 +134,10 @@ namespace job
                     DurationInSeconds = duration.Seconds
                 });
             }
+            catch (CloudException ex)
+            {
+                log.LogError(ex, JsonConvert.SerializeObject(ex.Body.Details));
+            }
             catch (Exception ex)
             {
                 log.LogError(ex, $"Error while deploying template {template}!");
@@ -137,10 +146,20 @@ namespace job
 
         private static string GenerateSecretsForAks()
         {
-            var parameters = new {
-                sshPublicKey = Environment.GetEnvironmentVariable("SSH_PUBLIC_KEY"),
-                spAppId = Environment.GetEnvironmentVariable("APPLICATION_ID"),
-                spClientSecret = Environment.GetEnvironmentVariable("CLIENT_SECRET")
+            var parameters = new
+            {
+                sshPublicKey = new
+                {
+                    value = Environment.GetEnvironmentVariable("SSH_PUBLIC_KEY")
+                },
+                spAppId = new
+                {
+                    value = Environment.GetEnvironmentVariable("APPLICATION_ID")
+                },
+                spClientSecret = new
+                {
+                    value = Environment.GetEnvironmentVariable("CLIENT_SECRET")
+                }
             };
 
             return JsonConvert.SerializeObject(parameters);

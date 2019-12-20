@@ -23,10 +23,11 @@
                 "dnsPrefix": "tcontc20190801",
                 "agentPoolProfiles": [
                     {
-                        "count": "1",
+                        "count": 1,
                         "vmSize": "Standard_D2_v3",
                         "osDiskSizeGB": 0,
                         "osType": "Linux",
+                        "name": "tcontc",
                         "type": "VirtualMachineScaleSets"
                     }
                 ],
