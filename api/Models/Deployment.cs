@@ -8,10 +8,26 @@ namespace api.Models
         public string serviceName { get; private set; }
         public DeploymentMetadata[] metadata { get; private set; }
 
-        public Deployment(string serviceName, IEnumerable<DeploymentTable> metadata)
+        public Deployment(string key, IEnumerable<DeploymentTable> metadata)
         {
-            this.serviceName = serviceName;
+            this.serviceName = MapKeyToServiceName(key);
             this.metadata = metadata.Select(_ => new DeploymentMetadata(_.DurationInSeconds, _.DateAndTime)).ToArray();
+        }
+
+        private string MapKeyToServiceName(string key)
+        {
+            switch (key)
+            {
+                case "appServicePlan": return "App Service Plan";
+                case "applicationInsights": return "Application Insights";
+                case "containerRegistry": return "Container Registry";
+                case "eventGridTopic": return "Event Grid(Topic)";
+                case "eventHubNamespace": return "Event Hub(Namespace)";
+                case "kubernetesService": return "Kubernetes Service";
+                case "storageAccount": return "Storage Account(V2)";
+                case "webApp": return "Web App";
+                default: return "Unknown";
+            }
         }
     }
 

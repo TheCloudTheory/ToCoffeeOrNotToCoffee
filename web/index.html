@@ -14,6 +14,11 @@
         integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
     <script src="app.js"></script>
+    <style>
+        .header-icon {
+            margin: 0px 0 0 5px !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -43,7 +48,7 @@
             <thead>
                 <tr>
                     <th>Service</th>
-                    <th>Time</th>
+                    <th>Time<i class="circular info icon inverted blue small header-icon" data-content="Time needed to complete deployment reported by Azure Resource Manager" data-variation="inverted"></i></th>
                     <th>Stability</th>
                 </tr>
             </thead>
@@ -54,7 +59,7 @@
             <thead>
                 <tr>
                     <th>Service</th>
-                    <th>Time</th>
+                    <th>Time<i class="circular info icon inverted blue small header-icon" data-content="Time needed to complete deployment reported by Azure Resource Manager" data-variation="inverted"></i></th>
                     <th>Stability</th>
                 </tr>
             </thead>
@@ -65,7 +70,7 @@
             <thead>
                 <tr>
                     <th>Service</th>
-                    <th>Time</th>
+                    <th>Time<i class="circular info icon inverted blue small header-icon" data-content="Time needed to complete deployment reported by Azure Resource Manager" data-variation="inverted"></i></th>
                     <th>Stability</th>
                 </tr>
             </thead>
@@ -76,7 +81,7 @@
             <thead>
                 <tr>
                     <th>Service</th>
-                    <th>Time</th>
+                    <th>Time<i class="circular info icon inverted blue small header-icon" data-content="Time needed to complete deployment reported by Azure Resource Manager" data-variation="inverted"></i></th>
                     <th>Stability</th>
                 </tr>
             </thead>
@@ -87,7 +92,7 @@
             <thead>
                 <tr>
                     <th>Service</th>
-                    <th>Time</th>
+                    <th>Time<i class="circular info icon inverted blue small header-icon" data-content="Time needed to complete deployment reported by Azure Resource Manager" data-variation="inverted"></i></th>
                     <th>Stability</th>
                 </tr>
             </thead>
@@ -100,6 +105,10 @@
         Services are deployed hourly to West Europe.<br />Check project on <a
             href="https://github.com/TheCloudTheory/ToCoffeeOrNotToCoffee" target="_blank">GitHub</a>!
     </div>
+
+    <script>
+        $('.header-icon').popup();
+    </script>
 </body>
 
 </html>
