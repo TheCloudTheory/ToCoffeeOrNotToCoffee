@@ -26,7 +26,9 @@ namespace api.Models
                 case "kubernetesService": return "Kubernetes Service";
                 case "storageAccount": return "Storage Account(V2)";
                 case "webApp": return "Web App";
-                default: return "Unknown";
+                case "virtualNetwork": return "Virtual Network";
+                case "loadBalancer": return "Load Balancer(Basic)";
+                default: return key;
             }
         }
     }

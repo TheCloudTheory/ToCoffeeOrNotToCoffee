@@ -25,7 +25,9 @@ namespace job
             "applicationInsights",
             "appServicePlan",
             "webApp",
-            "kubernetesService"
+            "kubernetesService",
+            "virtualNetwork",
+            "loadBalancer"
         };
 
         [FunctionName("DeployTemplates")]
@@ -131,7 +133,8 @@ namespace job
                 var duration = XmlConvert.ToTimeSpan(deployment.Inner.Properties.Duration);
                 deployments.Add(new Deployment(serviceName)
                 {
-                    DurationInSeconds = duration.Seconds
+                    DurationInSeconds = (int)duration.TotalSeconds,
+                    Version = version
                 });
             }
             catch (CloudException ex)
