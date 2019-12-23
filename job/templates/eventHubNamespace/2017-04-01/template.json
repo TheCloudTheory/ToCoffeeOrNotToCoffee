@@ -12,5 +12,11 @@
 			},
 			"type": "Microsoft.EventHub/namespaces"
 		}
-	]
+	],
+	"outputs": {
+		"serviceType": {
+			"type": "string",
+			"value": "Event Hub Namespace"
+		}
+	}
 }

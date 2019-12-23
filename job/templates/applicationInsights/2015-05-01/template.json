@@ -12,5 +12,11 @@
 				"Application_Type": "web"
 			}
 		}
-	]
+	],
+	"outputs": {
+		"serviceType": {
+			"type": "string",
+			"value": "Application Insights"
+		}
+	}
 }

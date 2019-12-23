@@ -50,5 +50,11 @@
             "resources": [
             ]
         }
-    ]
+    ],
+    "outputs": {
+		"serviceType": {
+			"type": "string",
+			"value": "Kubernetes Service (Linux, 1 Node)"
+		}
+	}
 }

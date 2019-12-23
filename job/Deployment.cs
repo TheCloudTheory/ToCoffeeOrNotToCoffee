@@ -15,5 +15,6 @@ namespace job
         public int DurationInSeconds { get; set; }
         public string DateAndTime { get; set; }
         public string Version { get; set; }
+        public string ServiceType { get; set; }
     }
 }

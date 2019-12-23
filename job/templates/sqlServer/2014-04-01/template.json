@@ -18,5 +18,11 @@
 			},
 			"type": "Microsoft.Sql/servers"
 		}
-	]
+	],
+	"outputs": {
+		"serviceType": {
+			"type": "string",
+			"value": "Azure SQL Server"
+		}
+	}
 }

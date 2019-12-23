@@ -177,5 +177,11 @@
                 "functionsRuntimeScaleMonitoringEnabled": false
             }
         }
-    ]
+    ],
+    "outputs": {
+		"serviceType": {
+			"type": "string",
+			"value": "Web App"
+		}
+	}
 }

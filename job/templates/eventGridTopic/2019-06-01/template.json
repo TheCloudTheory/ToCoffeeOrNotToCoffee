@@ -8,5 +8,11 @@
             "apiVersion": "2019-06-01",
             "location": "westeurope"
         }
-    ]
+    ],
+    "outputs": {
+		"serviceType": {
+			"type": "string",
+			"value": "Event Grid Topic"
+		}
+	}
 }

@@ -41,5 +41,11 @@
                 "publicIPAddressVersion": "IPv4"
             }
         }
-    ]
+    ],
+    "outputs": {
+		"serviceType": {
+			"type": "string",
+			"value": "Load Balancer (Basic)"
+		}
+	}
 }

@@ -26,5 +26,11 @@
                 "targetWorkerSizeId": 0
             }
         }
-    ]
+    ],
+    "outputs": {
+		"serviceType": {
+			"type": "string",
+			"value": "App Service Plan (Basic|B1)"
+		}
+	}
 }

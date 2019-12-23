@@ -11,5 +11,11 @@
 			},
 			"type": "Microsoft.ContainerRegistry/registries"
 		}
-	]
+	],
+	"outputs": {
+		"serviceType": {
+			"type": "string",
+			"value": "Container Registry (Basic)"
+		}
+	}
 }

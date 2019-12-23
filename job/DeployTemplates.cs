@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
+using jon;
 using Microsoft.Azure.Management.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
@@ -133,10 +134,12 @@ namespace job
                         .Create();
 
                 var duration = XmlConvert.ToTimeSpan(deployment.Inner.Properties.Duration);
+                var outputs = JsonConvert.DeserializeObject<IDictionary<string, Output>>(JsonConvert.SerializeObject(deployment.Outputs));
                 deployments.Add(new Deployment(serviceName)
                 {
                     DurationInSeconds = (int)duration.TotalSeconds,
-                    Version = version
+                    Version = version,
+                    ServiceType = outputs["serviceType"].Value
                 });
             }
             catch (CloudException ex)

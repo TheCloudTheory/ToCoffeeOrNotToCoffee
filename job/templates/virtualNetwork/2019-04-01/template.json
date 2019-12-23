@@ -25,5 +25,11 @@
                 "enableDdosProtection": false
             }
         }
-    ]
+    ],
+    "outputs": {
+		"serviceType": {
+			"type": "string",
+			"value": "Virtual Network"
+		}
+	}
 }

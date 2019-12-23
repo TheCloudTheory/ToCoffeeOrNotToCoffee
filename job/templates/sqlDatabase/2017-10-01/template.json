@@ -35,5 +35,11 @@
                 "tier": "Basic"
             }
         }
-    ]
+    ],
+    "outputs": {
+		"serviceType": {
+			"type": "string",
+			"value": "Azure SQL Database (Basic)"
+		}
+	}
 }

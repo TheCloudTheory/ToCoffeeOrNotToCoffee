@@ -7,7 +7,7 @@
 			"type": "Microsoft.Storage/storageAccounts",
 			"apiVersion": "2019-04-01",
 			"sku": {
-				"name": "Standard_LRS"
+				"name": "Standard_GRS"
 			},
 			"kind": "Storage",
 			"location": "westeurope"
