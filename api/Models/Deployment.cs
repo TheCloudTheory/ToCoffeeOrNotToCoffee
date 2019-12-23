@@ -28,6 +28,7 @@ namespace api.Models
                 case "webApp": return "Web App";
                 case "virtualNetwork": return "Virtual Network";
                 case "loadBalancer": return "Load Balancer(Basic)";
+                case "sqlServer": return "Azure SQL Server";
                 default: return key;
             }
         }

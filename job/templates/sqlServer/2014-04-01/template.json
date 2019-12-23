@@ -1,0 +1,22 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+    "parameters": {
+        "administratorLoginPassword": {
+            "type": "secureString"
+        }
+    },
+	"resources": [
+		{
+			"apiVersion": "2014-04-01",
+			"location": "westeurope",
+			"name": "tcontc20140401",
+			"properties": {
+                "version": "12.0",
+				"administratorLogin": "tcontc",
+				"administratorLoginPassword": "[parameters('administratorLoginPassword')]"
+			},
+			"type": "Microsoft.Sql/servers"
+		}
+	]
+}

@@ -27,7 +27,8 @@ namespace job
             "webApp",
             "kubernetesService",
             "virtualNetwork",
-            "loadBalancer"
+            "loadBalancer",
+            "sqlServer"
         };
 
         [FunctionName("DeployTemplates")]
@@ -126,7 +127,7 @@ namespace job
                 var deployment = azure.Deployments.Define(deploymentName)
                         .WithExistingResourceGroup(resourceGroupName)
                         .WithTemplate(File.ReadAllText(template))
-                        .WithParameters(serviceName == "kubernetesService" ? GenerateSecretsForAks() : "{}")
+                        .WithParameters(GetParametersForService(serviceName))
                         .WithMode(DeploymentMode.Complete)
                         .Create();
 
@@ -147,6 +148,16 @@ namespace job
             }
         }
 
+        private static string GetParametersForService(string serviceName)
+        {
+            switch (serviceName)
+            {
+                case "kubernetesService": return GenerateSecretsForAks();
+                case "sqlServer": return GenerateSecretsForSqlServer();
+                default: return "{}";
+            }
+        }
+
         private static string GenerateSecretsForAks()
         {
             var parameters = new
@@ -162,6 +173,19 @@ namespace job
                 spClientSecret = new
                 {
                     value = Environment.GetEnvironmentVariable("CLIENT_SECRET")
+                }
+            };
+
+            return JsonConvert.SerializeObject(parameters);
+        }
+
+        private static string GenerateSecretsForSqlServer()
+        {
+            var parameters = new
+            {
+                administratorLoginPassword = new
+                {
+                    value = Guid.NewGuid().ToString("N")
                 }
             };
 
