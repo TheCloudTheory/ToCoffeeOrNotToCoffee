@@ -185,7 +185,7 @@ namespace job
             {
                 administratorLoginPassword = new
                 {
-                    value = Guid.NewGuid().ToString("N")
+                    value = Environment.GetEnvironmentVariable("SQL_ADMIN_PASSWORD")
                 }
             };
 

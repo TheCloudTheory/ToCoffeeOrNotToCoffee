@@ -106,9 +106,9 @@ function app() {
             let stability = calculateStability(service.metadata);
 
             if (minutes === 0) {
-                html = `<td>${service.serviceName}</td><td><span class="duration-chart" data-service="${service.serviceName}">${seconds}s</span></td><td>${stability}</td>`;
+                html = `<td>${service.serviceName}</td><td class="text-center"><span class="duration-chart" data-service="${service.serviceName}">${seconds}s</span></td><td class="text-center">${stability}</td>`;
             } else {
-                html = `<td>${service.serviceName}</td><td><span class="duration-chart" data-service="${service.serviceName}">${minutes}m ${seconds}s</span></td><td>${stability}</td>`;
+                html = `<td>${service.serviceName}</td><td class="text-center"><span class="duration-chart" data-service="${service.serviceName}">${minutes}m ${seconds}s</span></td><td class="text-center">${stability}</td>`;
             }
 
             row.innerHTML = html;
