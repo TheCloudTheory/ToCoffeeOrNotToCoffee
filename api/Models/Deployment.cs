@@ -29,6 +29,7 @@ namespace api.Models
                 case "virtualNetwork": return "Virtual Network";
                 case "loadBalancer": return "Load Balancer(Basic)";
                 case "sqlServer": return "Azure SQL Server";
+                case "sqlDatabase": return "Azure SQL Database";
                 default: return key;
             }
         }

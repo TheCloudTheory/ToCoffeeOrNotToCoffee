@@ -28,7 +28,8 @@ namespace job
             "kubernetesService",
             "virtualNetwork",
             "loadBalancer",
-            "sqlServer"
+            "sqlServer",
+            "sqlDatabase"
         };
 
         [FunctionName("DeployTemplates")]
@@ -154,6 +155,7 @@ namespace job
             {
                 case "kubernetesService": return GenerateSecretsForAks();
                 case "sqlServer": return GenerateSecretsForSqlServer();
+                case "sqlDatabase": return GenerateSecretsForSqlServer();
                 default: return "{}";
             }
         }

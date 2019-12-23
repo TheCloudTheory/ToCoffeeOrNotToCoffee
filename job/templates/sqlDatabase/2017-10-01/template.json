@@ -1,0 +1,39 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "administratorLoginPassword": {
+            "type": "secureString"
+        }
+    },
+    "resources": [
+        {
+			"apiVersion": "2014-04-01",
+			"location": "westeurope",
+			"name": "tcontc20140401",
+			"properties": {
+                "version": "12.0",
+				"administratorLogin": "tcontc",
+				"administratorLoginPassword": "[parameters('administratorLoginPassword')]"
+			},
+			"type": "Microsoft.Sql/servers"
+		},
+        {
+            "type": "Microsoft.Sql/servers/databases",
+            "apiVersion": "2017-10-01-preview",
+            "location": "westeurope",
+            "name": "[concat('tcontc20140401', '/', 'tcontc20171001')]",
+            "properties": {
+                "collation": "SQL_Latin1_General_CP1_CI_AS",
+                "maxSizeBytes": 2147483648,
+                "zoneRedundant": false,
+                "readScale": "Disabled",
+                "readReplicaCount": 0
+            },
+            "sku": {
+                "name": "Basic",
+                "tier": "Basic"
+            }
+        }
+    ]
+}
