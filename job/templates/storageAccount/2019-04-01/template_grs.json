@@ -16,7 +16,7 @@
 	"outputs": {
 		"serviceType": {
 			"type": "string",
-			"value": "Storage Account (V2|Standard_LRS)"
+			"value": "Storage Account (V2|Standard_GRS)"
 		}
 	}
 }
