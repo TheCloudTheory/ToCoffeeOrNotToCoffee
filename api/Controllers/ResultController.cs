@@ -33,7 +33,7 @@ namespace api.Controllers
 
             var table = this.storage.Client.GetTableReference("deployments");
             var queryResult = await table.ExecuteQuerySegmentedAsync<DeploymentTable>(new TableQuery<DeploymentTable>(), null);
-            var result = queryResult.Results.GroupBy(_ => _.PartitionKey)
+            var result = queryResult.Results.GroupBy(_ => string.IsNullOrEmpty(_.ServiceType) ? _.PartitionKey : _.ServiceType)
                             .Select(_ => new Deployment(_.Key, _.Take(24).Select(d => d))).ToArray();
 
             Cache.Clear();

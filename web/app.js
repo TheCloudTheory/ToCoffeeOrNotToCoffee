@@ -104,11 +104,14 @@ function app() {
             let seconds = service.metadata[0].duration - minutes * 60;
             let html = '';
             let stability = calculateStability(service.metadata);
+            let metadataPosition = service.serviceName.indexOf("(");
+            let serviceName = metadataPosition !== -1 ? service.serviceName.slice(0, metadataPosition - 1) : service.serviceName;
+            let typeName = metadataPosition !== -1 ? service.serviceName.slice(metadataPosition, service.serviceName.length - 1).replace("(", "") : "-";
 
             if (minutes === 0) {
-                html = `<td>${service.serviceName}</td><td class="text-center"><span class="duration-chart" data-service="${service.serviceName}">${seconds}s</span></td><td class="text-center">${stability}</td>`;
+                html = `<td>${serviceName}</td><td>${typeName}</td><td class="text-center"><span class="duration-chart" data-service="${service.serviceName}">${seconds}s</span></td><td class="text-center">${stability}</td>`;
             } else {
-                html = `<td>${service.serviceName}</td><td class="text-center"><span class="duration-chart" data-service="${service.serviceName}">${minutes}m ${seconds}s</span></td><td class="text-center">${stability}</td>`;
+                html = `<td>${serviceName}</td><td>${typeName}</td><td class="text-center"><span class="duration-chart" data-service="${service.serviceName}">${minutes}m ${seconds}s</span></td><td class="text-center">${stability}</td>`;
             }
 
             row.innerHTML = html;
