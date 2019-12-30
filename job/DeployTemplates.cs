@@ -76,10 +76,9 @@ namespace job
             return $"{serviceName}-{now.ToString("yyyMMddHHmm")}-rg";
         }
 
-        private static string GenerateDeploymentName(string serviceName, string version, string template)
+        private static string GenerateDeploymentName()
         {
-            var now = DateTime.Now;
-            return $"{serviceName}-{now.ToString("yyyMMddHHmm")}-{template}-{version}";
+            return Guid.NewGuid().ToString();
         }
 
         private static void DeployResourceGroup(
@@ -125,7 +124,7 @@ namespace job
             try
             {
                 var version = new DirectoryInfo(versionDirectory).Name;
-                var deploymentName = GenerateDeploymentName(serviceName, version, template);
+                var deploymentName = GenerateDeploymentName();
                 var deployment = azure.Deployments.Define(deploymentName)
                         .WithExistingResourceGroup(resourceGroupName)
                         .WithTemplate(File.ReadAllText(template))
