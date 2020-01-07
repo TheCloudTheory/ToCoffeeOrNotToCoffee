@@ -1,0 +1,51 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "resources": [
+        {
+            "apiVersion": "2019-06-01",
+            "name": "tcontc20190601",
+            "type": "Microsoft.Network/loadBalancers",
+            "location": "westeurope",
+            "sku": {
+                "name": "Standard"
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Network/publicIPAddresses/', 'tcontc-ips')]"
+            ],
+            "tags": {},
+            "properties": {
+                "frontendIPConfigurations": [
+                    {
+                        "name": "LoadBalancerFrontEnd",
+                        "properties": {
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'tcontc-ips')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "apiVersion": "2019-02-01",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "name": "tcontc-ips",
+            "location": "westeurope",
+            "sku": {
+                "name": "Basic"
+            },
+            "tags": {},
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "publicIPAddressVersion": "IPv4"
+            }
+        }
+    ],
+    "outputs": {
+		"serviceType": {
+			"type": "string",
+			"value": "Load Balancer (Basic)"
+		}
+	}
+}
