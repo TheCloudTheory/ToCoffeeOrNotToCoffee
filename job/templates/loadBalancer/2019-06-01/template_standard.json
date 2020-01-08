@@ -45,7 +45,7 @@
     "outputs": {
 		"serviceType": {
 			"type": "string",
-			"value": "Load Balancer (Basic)"
+			"value": "Load Balancer (Standard)"
 		}
 	}
 }
