@@ -31,15 +31,32 @@ namespace api.Controllers
                 return Cache[now];
             }
 
-            var table = this.storage.Client.GetTableReference("deployments");
-            var queryResult = await table.ExecuteQuerySegmentedAsync<DeploymentTable>(new TableQuery<DeploymentTable>(), null);
-            var result = queryResult.Results.GroupBy(_ => string.IsNullOrEmpty(_.ServiceType) ? _.PartitionKey : _.ServiceType)
+            var queryResult = await ExecuteQuery();
+            var result = queryResult.GroupBy(_ => string.IsNullOrEmpty(_.ServiceType) ? _.PartitionKey : _.ServiceType)
                             .Select(_ => new Deployment(_.Key, _.Take(24).Select(d => d))).ToArray();
 
             Cache.Clear();
             Cache.Add(now, result);
 
             return result;
+        }
+
+        private async Task<List<DeploymentTable>> ExecuteQuery()
+        {
+            var query = new TableQuery<DeploymentTable>();
+            var table = this.storage.Client.GetTableReference("deployments");
+            TableContinuationToken ct = null;
+            var results = new List<DeploymentTable>();
+
+            do
+            {
+                var queryResult = await table.ExecuteQuerySegmentedAsync<DeploymentTable>(query, ct);
+                ct = queryResult.ContinuationToken;
+                results.AddRange(queryResult.Results);
+            }
+            while (ct != null && string.IsNullOrWhiteSpace(ct.NextPartitionKey) == false);
+
+            return results;
         }
     }
 }

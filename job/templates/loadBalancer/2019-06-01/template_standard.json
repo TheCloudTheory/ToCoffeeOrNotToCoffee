@@ -33,11 +33,11 @@
             "name": "tcontc-ips",
             "location": "westeurope",
             "sku": {
-                "name": "Basic"
+                "name": "Standard"
             },
             "tags": {},
             "properties": {
-                "publicIPAllocationMethod": "Dynamic",
+                "publicIPAllocationMethod": "Static",
                 "publicIPAddressVersion": "IPv4"
             }
         }
