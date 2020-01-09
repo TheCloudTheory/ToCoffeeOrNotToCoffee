@@ -93,6 +93,9 @@ function app() {
         renderBucket('lessThan300Services', lessThan300Seconds);
         renderBucket('lessThan600Services', lessThan600Seconds);
         renderBucket('longLastingServices', longLastingDeployments);
+
+        let mainContainer = document.getElementById('main-container');
+        mainContainer.classList.remove('loading');
     }
 
     function renderBucket(elementId, bucket) {
