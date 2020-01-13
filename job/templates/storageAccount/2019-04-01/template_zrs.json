@@ -3,7 +3,7 @@
 	"contentVersion": "1.0.0.0",
 	"resources": [
 		{
-			"name": "tcornc20190401",
+			"name": "tcornc20190401zrs",
 			"type": "Microsoft.Storage/storageAccounts",
 			"apiVersion": "2019-04-01",
 			"sku": {
