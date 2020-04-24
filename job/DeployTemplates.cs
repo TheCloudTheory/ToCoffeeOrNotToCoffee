@@ -30,7 +30,22 @@ namespace job
             "virtualNetwork",
             "loadBalancer",
             "sqlServer",
-            "sqlDatabase"
+            "sqlDatabase",
+            "virtualMachine"
+        };
+
+        private static string[] locations = new[] {
+            "North Europe",
+            "West Europe",
+            "France Central",
+            "France South",
+            "UK South",
+            "UK West",
+            "Central US",
+            "East US",
+            "East US 2",
+            "North Central US",
+            "South Central US",
         };
 
         [FunctionName("DeployTemplates")]
@@ -64,7 +79,14 @@ namespace job
 
             foreach (var versionDirectory in Directory.EnumerateDirectories(templatesDir))
             {
-                DeployResourceGroup(serviceName, versionDirectory, deployments, log);
+                if (serviceName == "virtualMachine")
+                {
+                    DeployResourceGroupsForVirtualMachines(versionDirectory, deployments, log);
+                }
+                else
+                {
+                    DeployResourceGroup(serviceName, versionDirectory, deployments, log);
+                }
             }
 
             return deployments;
@@ -114,6 +136,43 @@ namespace job
             }
         }
 
+        private static void DeployResourceGroupsForVirtualMachines(
+            string versionDirectory,
+            List<Deployment> deployments,
+            ILogger log
+        )
+        {
+            foreach (var location in locations)
+            {
+                var normalizedLocationName = location.ToLowerInvariant().Replace(" ", string.Empty);
+                var resourceGroupName = GenerateResourceGroupName($"vm{normalizedLocationName}");
+
+                try
+                {
+                    azure.ResourceGroups.Define(resourceGroupName)
+                            .WithRegion(location)
+                            .Create();
+
+                    foreach (var template in Directory.EnumerateFiles(versionDirectory))
+                    {
+                        DeployResource(versionDirectory, "virtualMachine", resourceGroupName, template, deployments, log);
+                    }
+                }
+                catch (CloudException ex)
+                {
+                    log.LogError(ex, JsonConvert.SerializeObject(ex.Body.Details));
+                }
+                catch (Exception ex)
+                {
+                    log.LogError(ex, $"Error while deploying resource group {resourceGroupName}!");
+                }
+                finally
+                {
+                    azure.ResourceGroups.DeleteByName(resourceGroupName);
+                }
+            }
+        }
+
         private static void DeployResource(
             string versionDirectory,
             string serviceName,
@@ -158,6 +217,7 @@ namespace job
                 case "kubernetesService": return GenerateSecretsForAks();
                 case "sqlServer": return GenerateSecretsForSqlServer();
                 case "sqlDatabase": return GenerateSecretsForSqlServer();
+                case "virtualMachine": return GenerateParametersForVirtualMachine();
                 default: return "{}";
             }
         }
@@ -191,6 +251,20 @@ namespace job
                 {
                     value = Environment.GetEnvironmentVariable("SQL_ADMIN_PASSWORD")
                 }
+            };
+
+            return JsonConvert.SerializeObject(parameters);
+        }
+
+        private static string GenerateParametersForVirtualMachine()
+        {
+            var parameters = new
+            {
+                adminPassword = new
+                {
+                    value = Environment.GetEnvironmentVariable("VM_ADMIN_PASSWORD")
+                },
+
             };
 
             return JsonConvert.SerializeObject(parameters);
