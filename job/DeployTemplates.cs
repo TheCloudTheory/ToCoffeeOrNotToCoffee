@@ -264,7 +264,10 @@ namespace job
                 {
                     value = Environment.GetEnvironmentVariable("VM_ADMIN_PASSWORD")
                 },
-
+                dnsLabelPrefix = new
+                {
+                    value = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)
+                }
             };
 
             return JsonConvert.SerializeObject(parameters);
