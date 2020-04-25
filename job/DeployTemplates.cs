@@ -266,7 +266,7 @@ namespace job
                 },
                 dnsLabelPrefix = new
                 {
-                    value = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)
+                    value = $"a{Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 10)}"
                 }
             };
 
