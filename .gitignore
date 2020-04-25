@@ -1,3 +1,4 @@
 api/obj/*
 api/bin/*
 api/appsettings.Local.json
+my.azureauth
