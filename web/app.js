@@ -110,15 +110,27 @@ function app() {
             let metadataPosition = service.serviceName.indexOf("(");
             let serviceName = metadataPosition !== -1 ? service.serviceName.slice(0, metadataPosition - 1) : service.serviceName;
             let typeName = metadataPosition !== -1 ? service.serviceName.slice(metadataPosition, service.serviceName.length - 1).replace("(", "") : "-";
+            console.log(typeName);
 
             if (minutes === 0) {
-                html = `<td>${serviceName}</td><td>${typeName}</td><td class="text-center"><span class="duration-chart" data-service="${service.serviceName}">${seconds}s</span></td><td class="text-center">${stability}</td>`;
+                html = `<td>${serviceName}</td><td class="text-center">${renderTypeLabels(typeName)}</td><td class="text-center"><span class="duration-chart" data-service="${service.serviceName}">${seconds}s</span></td><td class="text-center">${stability}</td>`;
             } else {
-                html = `<td>${serviceName}</td><td>${typeName}</td><td class="text-center"><span class="duration-chart" data-service="${service.serviceName}">${minutes}m ${seconds}s</span></td><td class="text-center">${stability}</td>`;
+                html = `<td>${serviceName}</td><td class="text-center">${renderTypeLabels(typeName)}</td><td class="text-center"><span class="duration-chart" data-service="${service.serviceName}">${minutes}m ${seconds}s</span></td><td class="text-center">${stability}</td>`;
             }
 
             row.innerHTML = html;
             htmlElement.appendChild(row);
+        }
+
+        function renderTypeLabels(type) {
+            let types = type.split('|');
+            let result = '';
+
+            for(let i = 0; i < types.length; i++) {
+                result += `<div class="ui label" data-variation="inverted">${types[i]}</div>`;
+            }
+
+            return result;
         }
 
         function calculateStability(metadata) {

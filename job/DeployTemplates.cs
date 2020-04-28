@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using System.Xml;
 using jon;
 using Microsoft.Azure.Management.Fluent;
-using Microsoft.Azure.Management.ResourceManager.Fluent;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Core;
 using Microsoft.Azure.Management.ResourceManager.Fluent.Models;
 using Microsoft.Azure.WebJobs;
@@ -17,7 +16,7 @@ namespace job
 {
     public static class DeployTemplates
     {
-        private static IAzure azure = Authenticate();
+        private static IAzure azure = Authentication.Authenticate();
         private static string[] services = new[] {
             "storageAccount",
             "containerRegistry",
@@ -166,10 +165,6 @@ namespace job
                 {
                     log.LogError(ex, $"Error while deploying resource group {resourceGroupName}!");
                 }
-                finally
-                {
-                    azure.ResourceGroups.DeleteByName(resourceGroupName);
-                }
             }
         }
 
@@ -273,19 +268,6 @@ namespace job
             };
 
             return JsonConvert.SerializeObject(parameters);
-        }
-
-        private static IAzure Authenticate()
-        {
-            var credentials = SdkContext.AzureCredentialsFactory.FromFile(Environment.GetEnvironmentVariable("AZURE_AUTH_LOCATION"));
-
-            var azure = Azure
-                .Configure()
-                .WithLogLevel(HttpLoggingDelegatingHandler.Level.Basic)
-                .Authenticate(credentials)
-                .WithDefaultSubscription();
-
-            return azure;
         }
     }
 }
