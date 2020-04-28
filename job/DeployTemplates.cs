@@ -38,7 +38,6 @@ namespace job
             "North Europe",
             "West Europe",
             "France Central",
-            "France South",
             "UK South",
             "UK West",
             "Central US",
@@ -50,7 +49,7 @@ namespace job
 
         [FunctionName("DeployTemplates")]
         public static async Task Run(
-            [TimerTrigger("0 0 */1 * * *")]TimerInfo myTimer,
+            [TimerTrigger("0 0 */2 * * *")]TimerInfo myTimer,
             [Table("deployments", Connection = "ToCoffeeStorage")] ICollector<Deployment> table,
             ILogger log
         )
@@ -115,6 +114,7 @@ namespace job
             {
                 azure.ResourceGroups.Define(resourceGroupName)
                         .WithRegion(Region.EuropeWest)
+                        .WithTag("Origin", "ToCoffeeOrNotToCoffee")
                         .Create();
 
                 foreach (var template in Directory.EnumerateFiles(versionDirectory))
@@ -199,6 +199,8 @@ namespace job
                     Version = version,
                     ServiceType = outputs["serviceType"].Value
                 });
+
+                log.LogInformation("Deployment of {0} on {1} finished!", serviceName, resourceGroupName);
             }
             catch (CloudException ex)
             {
